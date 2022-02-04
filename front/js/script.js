@@ -1,65 +1,66 @@
+// On récupère les infos de l'API
+
 fetch("http://localhost:3000/api/products")
   .then((res) => res.json())
   .then((data) => {
     console.log(data)
-    return addProducts(data)
+    return getArticles(data)
   })
 
-function addProducts(donnees) {
-  const _id = donnees[0]._id
-  const imageUrl = donnees[0].imageUrl
-  const altTxt = donnees[0].altTxt
-  const name = donnees[0].name
-  const description = donnees[0].description
+  // On répartit les données de l'API dans le DOM
 
-  const anchor = makeAnchor(_id)
+function getArticles(products) {
   
-  const article = document.createElement("article")
-  const image = makeImage(imageUrl, altTxt)
-  const h3 = makeH3(name)
-  const p = makeParagraph(description)
- 
-  appendElementsToArticles(article, image, h3, p)
-  appendArticleToAnchor(anchor, article)
+  products.forEach((product) => {
+    let { _id, imageUrl, altTxt, name, description } = product
+    let link = productLink(_id)
+    let article = document.createElement("article")
+    let image = productImg(imageUrl, altTxt)
+    let h3 = productName(name)
+    let p = productInfo(description)
+  
+    appendElementsToArticle(article, [image, h3, p])
+    appendArticleToLink(link, article)
+  })
+}
+  
+function appendElementsToArticle(article, array) {
+  array.forEach((item) => {
+    article.appendChild(item)
+  })
 }
 
-function appendElementsToArticles(article, image, h3, p) {
-  article.appendChild(image)
-  article.appendChild(h3)
-  article.appendChild(p)
+function productLink(id) {
+  let productLink = document.createElement("a")
+  productLink.href = "./product.html?id=" + id
+  return productLink
 }
 
-function makeAnchor(_id) {
-  const anchor = document.createElement("a")
-  anchor.href = "product.html?id=" + _id 
-  return anchor
-}
-function appendArticleToAnchor(anchor, article) {
-  const items = document.querySelector("#items")
+
+function appendArticleToLink(link, article) {
+  let items = document.querySelector("#items")
   if (items != null) {
-    items.appendChild(anchor)
-    anchor.appendChild(article)
+    items.appendChild(link)
+    link.appendChild(article)
   }
 }
 
-function makeImage(imageUrl, altTxt) {
-  const image = document.createElement("img")
+function productImg(imageUrl, altTxt) {
+  let image = document.createElement("img")
   image.src = imageUrl
   image.alt = altTxt
-  image.removeAttribute("title")
-  image.removeAttribute("style")
   return image
 }
 
-function makeH3(name) {
-  const h3 = document.createElement("h3")
+function productName(name) {
+  let h3 = document.createElement("h3")
   h3.textContent = name
   h3.classList.add("productName")
   return h3
 }
 
-function makeParagraph(description) {
-  const p = document.createElement("p")
+function productInfo(description) {
+  let p = document.createElement("p")
   p.textContent = description
   p.classList.add("productDescription")
   return p
