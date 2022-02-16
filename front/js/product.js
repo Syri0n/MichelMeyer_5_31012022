@@ -4,7 +4,7 @@ let id = urlParams.get("id");
 
 if (id != null) {
   let itemPrice = 0;
-  let imgUrl, altText;
+  let imgUrl, altText, articleName;
 }
 
 // On répupère l'id du produit depuis l'API
@@ -18,6 +18,7 @@ function handleData(kanap) {
   itemPrice = price;
   imgUrl = imageUrl;
   altText = altTxt;
+  articleName = name;
   makeImage(imageUrl, altTxt);
   makeTitle(name);
   makeDescription(description);
@@ -83,11 +84,12 @@ function saveOrder(color, quantity) {
     price: itemPrice,
     imageUrl: imgUrl,
     altTxt: altText,
+    name: articleName,
   };
   localStorage.setItem(id, JSON.stringify(data));
 }
 
-// Empêche le changement de page si un ou pluisieurs éléments est null
+// Empêche le changement de page si un ou plusieurs éléments est null
 
 function isOrderInvalid(color, quantity) {
   if (color == null || color === "" || quantity == null || quantity == 0) {
