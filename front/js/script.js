@@ -2,10 +2,7 @@
 
 fetch("http://localhost:3000/api/products")
   .then((res) => res.json())
-  .then((data) => {
-    console.log(data);
-    return getArticles(data);
-  });
+  .then((data) => getArticles(data));
 
 // On répartit les données de l'API dans le DOM
 

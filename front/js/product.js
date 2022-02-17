@@ -77,6 +77,9 @@ function handleClick() {
 // On sauvegarde les articles dans le localStorage
 
 function saveOrder(color, quantity) {
+  //pour éditer l'id de l'article en fonction de la couleur
+  const key = `${id}-${color}`;
+
   const data = {
     id: id,
     color: color,
@@ -86,7 +89,7 @@ function saveOrder(color, quantity) {
     altTxt: altText,
     name: articleName,
   };
-  localStorage.setItem(id, JSON.stringify(data));
+  localStorage.setItem(key, JSON.stringify(data));
 }
 
 // Empêche le changement de page si un ou plusieurs éléments est null
