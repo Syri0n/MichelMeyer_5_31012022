@@ -8,12 +8,12 @@ fetch("http://localhost:3000/api/products")
 
 function getArticles(products) {
   products.forEach((product) => {
-    let { _id, imageUrl, altTxt, name, description } = product;
-    let link = productLink(_id);
-    let article = document.createElement("article");
-    let image = productImg(imageUrl, altTxt);
-    let h3 = productName(name);
-    let p = productInfo(description);
+    const { _id, imageUrl, altTxt, name, description } = product;
+    const link = productLink(_id);
+    const article = document.createElement("article");
+    const image = productImg(imageUrl, altTxt);
+    const h3 = productName(name);
+    const p = productInfo(description);
 
     appendElementsToArticle(article, [image, h3, p]);
     appendArticleToLink(link, article);
