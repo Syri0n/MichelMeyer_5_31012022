@@ -1,6 +1,6 @@
 const cart = [];
 
-// On récupère les données depuis le localStorage
+// On récupère les articles depuis le cache
 
 retrieveItemsFromCache();
 cart.forEach((item) => displayItem(item));
@@ -17,6 +17,8 @@ function retrieveItemsFromCache() {
   }
 }
 
+// On affiche les articles dans le panier
+
 function displayItem(item) {
   const article = makeArticle(item);
   const imageDiv = makeImageDiv(item);
@@ -30,7 +32,7 @@ function displayItem(item) {
 
 function makeArticle(item) {
   const article = document.createElement("article");
-  article.classList.add("card__item");
+  article.classList.add("cart__item");
   article.dataset.id = item.id;
   article.dataset.color = item.color;
   return article;
@@ -189,3 +191,5 @@ function deleteArticleFromPage(item) {
   );
   articleToDelete.remove();
 }
+
+// ---- Formulaire ----

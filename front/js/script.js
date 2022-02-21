@@ -26,11 +26,15 @@ function appendElementsToArticle(article, array) {
   });
 }
 
+// Insertion de l'élément "a"
+
 function productLink(id) {
   let productLink = document.createElement("a");
   productLink.href = "./product.html?id=" + id;
   return productLink;
 }
+
+// Insertion de l'élément "article"
 
 function appendArticleToLink(link, article) {
   let items = document.querySelector("#items");
@@ -40,6 +44,8 @@ function appendArticleToLink(link, article) {
   }
 }
 
+// Insertion de l'élément "img"
+
 function productImg(imageUrl, altTxt) {
   let image = document.createElement("img");
   image.src = imageUrl;
@@ -47,12 +53,16 @@ function productImg(imageUrl, altTxt) {
   return image;
 }
 
+// Insertion de l'élément "h3"
+
 function productName(name) {
   let h3 = document.createElement("h3");
   h3.textContent = name;
   h3.classList.add("productName");
   return h3;
 }
+
+// Insertion de l'élément "p"
 
 function productInfo(description) {
   let p = document.createElement("p");

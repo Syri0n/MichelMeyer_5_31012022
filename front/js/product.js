@@ -7,7 +7,7 @@ if (id != null) {
   let imgUrl, altText, articleName;
 }
 
-// On répupère l'id du produit depuis l'API
+// Récupération des articles de l'API
 
 fetch("http://localhost:3000/api/products/" + id)
   .then((response) => response.json())
@@ -26,6 +26,8 @@ function handleData(kanap) {
   makeOptions(colors);
 }
 
+// Insertion de l'image
+
 function makeImage(imageUrl, altTxt) {
   const image = document.createElement("img");
   image.src = imageUrl;
@@ -34,20 +36,28 @@ function makeImage(imageUrl, altTxt) {
   if (parent != null) parent.appendChild(image);
 }
 
+// Insertion du titre
+
 function makeTitle(name) {
   const h1 = document.querySelector("#title");
   if (h1 != null) h1.textContent = name;
 }
+
+// Insertion de lq description
 
 function makeDescription(description) {
   const p = document.querySelector("#description");
   if (p != null) p.textContent = description;
 }
 
+// Insertion du prix
+
 function makePrice(price) {
   const span = document.querySelector("#price");
   if (span != null) span.textContent = price;
 }
+
+// Insertion de la couleur
 
 function makeOptions(colors) {
   const select = document.querySelector("#colors");
@@ -61,8 +71,12 @@ function makeOptions(colors) {
   }
 }
 
+// Insertion du bouton "ajouter au panier"
+
 const button = document.querySelector("#addToCart");
 button.addEventListener("click", handleClick);
+
+// Insertion du choix de couleur
 
 function handleClick() {
   const color = document.querySelector("#colors").value;
@@ -92,7 +106,7 @@ function saveOrder(color, quantity) {
   localStorage.setItem(key, JSON.stringify(data));
 }
 
-// Empêche le changement de page si un ou plusieurs éléments est null
+// Empêche le changement de page si un ou plusieurs éléments est null avec fenêtre pop-up
 
 function isOrderInvalid(color, quantity) {
   if (color == null || color === "" || quantity == null || quantity == 0) {
