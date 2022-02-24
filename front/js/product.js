@@ -84,7 +84,7 @@ function handleClick() {
 
   if (isOrderInvalid(color, quantity)) return;
   saveOrder(color, quantity);
-
+  alert("Produit ajouté au panier");
   window.location.href = "cart.html";
 }
 
