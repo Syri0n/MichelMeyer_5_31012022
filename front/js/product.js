@@ -3,6 +3,7 @@ let urlParams = new URLSearchParams(queryString);
 let id = urlParams.get("id");
 
 // Récupération des articles de l'API
+
 fetch("http://localhost:3000/api/products/" + id)
   .then((response) => response.json())
   .then((res) => handleData(res));
@@ -62,6 +63,8 @@ function makeOptions(colors) {
 
 // Insertion du bouton "ajouter au panier"
 const button = document.querySelector("#addToCart");
+
+// On écoute l'évenement au click
 button.addEventListener("click", handleClick);
 
 // Insertion du choix de couleur
@@ -70,6 +73,7 @@ function handleClick() {
   const quantity = document.querySelector("#quantity").value;
 
   if (isOrderInvalid(color, quantity)) return;
+  addNewProduct();
   saveOrder(color, quantity);
   alert("Produit ajouté au panier");
   window.location.href = "cart.html";
@@ -94,8 +98,13 @@ function saveOrder(color, quantity) {
 
 // Empêche le changement de page si un ou plusieurs éléments est null avec fenêtre pop-up
 function isOrderInvalid(color, quantity) {
-  if (color == null || color === "" || quantity == null || quantity == 0) {
-    alert(" Merci de choisir une couleur et une quantitée");
+  if (color == null || color === "" || color == 0) {
+    alert(" Merci de choisir une couleur");
+    return true;
+  } else if (quantity === "" || quantity == null || quantity == 0) {
+    alert(" Merci de choisir une quantitée");
     return true;
   }
 }
+
+function addNewProduct() {}
