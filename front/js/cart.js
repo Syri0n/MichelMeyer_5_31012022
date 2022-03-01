@@ -193,7 +193,11 @@ function deleteArticleFromPage(item) {
   articleToDelete.remove();
 }
 
+<<<<<<< HEAD
 //-------------------------------- Formulaire --------------------------------------------
+=======
+//-------- Formulaire --------
+>>>>>>> c0ea87dc26635d46129b946131b66d9324376bdb
 
 const orderButton = document.querySelector("#order");
 orderButton.addEventListener("click", (e) => submitForm(e));
@@ -201,7 +205,11 @@ orderButton.addEventListener("click", (e) => submitForm(e));
 function submitForm(e) {
   e.preventDefault();
   if (cart.length === 0) {
+<<<<<<< HEAD
     alert("Veuillez choisir un article !");
+=======
+    alert("Please select items to buy");
+>>>>>>> c0ea87dc26635d46129b946131b66d9324376bdb
     return;
   }
 
@@ -226,17 +234,25 @@ function submitForm(e) {
 }
 
 function isEmailInvalid() {
+<<<<<<< HEAD
   let email = document.querySelector("#email").value;
   let regex = /^[A-Za-z0-9\-\.]+@([A-Za-z0-9\-]+\.)+[A-Za-z0-9-]{2,4}$/;
   if (regex.test(email) === false) {
     let erreurDeSaisi = document.getElementById("emailErrorMsg");
     erreurDeSaisi.innerHTML = "Le champ Email est requis";
+=======
+  const email = document.querySelector("#email").value;
+  const regex = /^[A-Za-z0-9\-\.]+@([A-Za-z0-9\-]+\.)+[A-Za-z0-9-]{2,4}$/;
+  if (regex.test(email) === false) {
+    alert("Veuillez rentrer une adresse email valide !");
+>>>>>>> c0ea87dc26635d46129b946131b66d9324376bdb
     return true;
   }
   return false;
 }
 
 function isFormInvalid() {
+<<<<<<< HEAD
   // Variables pour récupérer les id du HTML
   let inputFirstName = document.getElementById("firstName");
   let inputLastName = document.getElementById("lastName");
@@ -318,6 +334,17 @@ function isFormInvalid() {
     let erreurDeSaisi = document.getElementById("cityErrorMsg");
     erreurDeSaisi.innerHTML = "";
   }
+=======
+  const form = document.querySelector(".cart__order__form");
+  const inputs = form.querySelectorAll("input");
+  inputs.forEach((input) => {
+    if (input.value === "") {
+      alert("Veuillez compléter le formulaire");
+      return true;
+    }
+    return false;
+  });
+>>>>>>> c0ea87dc26635d46129b946131b66d9324376bdb
 }
 
 function makeRequestBody() {
