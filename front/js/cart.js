@@ -1,12 +1,9 @@
 const cart = [];
 
-// On récupère les données depuis le localStorage
+// On récupère les articles depuis le cache
 
 retrieveItemsFromCache();
 cart.forEach((item) => displayItem(item));
-
-const orderButton = document.querySelector("#order");
-orderButton.addEventListener("click", (e) => submitForm(e));
 
 function retrieveItemsFromCache() {
   const numberOfItems = localStorage.length;
@@ -16,6 +13,8 @@ function retrieveItemsFromCache() {
     cart.push(itemObject);
   }
 }
+
+// On affiche les articles dans le panier
 
 function displayItem(item) {
   const article = makeArticle(item);
@@ -28,9 +27,10 @@ function displayItem(item) {
   displayTotalPrice();
 }
 
+// Insertion de l'article
 function makeArticle(item) {
   const article = document.createElement("article");
-  article.classList.add("card__item");
+  article.classList.add("cart__item");
   article.dataset.id = item.id;
   article.dataset.color = item.color;
   return article;
@@ -61,6 +61,7 @@ function makeSettings(item) {
   return settings;
 }
 
+// Insertion de la desription
 function makeDescription(item) {
   const description = document.createElement("div");
   description.classList.add("cart__item__content__description");
@@ -78,6 +79,7 @@ function makeDescription(item) {
   return description;
 }
 
+// Insertion de l'image
 function makeImageDiv(item) {
   const div = document.createElement("div");
   div.classList.add("cart__item__img");
@@ -89,6 +91,7 @@ function makeImageDiv(item) {
   return div;
 }
 
+// Insertion de Qté
 function addQuantityToSettings(settings, item) {
   const quantity = document.createElement("div");
   quantity.classList.add("cart__item__content__settings__quantity");
@@ -138,8 +141,8 @@ function displayTotalPrice() {
 
 function updatePriceAndQuantity(id, newValue, item) {
   const itemToUpdate = cart.find((item) => item.id === id);
-  //itemToUpdate.quantity = Number(newValue);
-  //item.quantity = itemToUpdate.quantity;
+  // itemToUpdate.quantity = Number(newValue);
+  // item.quantity = itemToUpdate.quantity;
   item.quantity = Number(newValue);
   displayTotalQuantity();
   displayTotalPrice();
@@ -188,4 +191,162 @@ function deleteArticleFromPage(item) {
     `article[data-id="${item.id}"][data-color="${item.color}"]`
   );
   articleToDelete.remove();
+}
+
+//-------------------------------- Formulaire --------------------------------------------
+
+const orderButton = document.querySelector("#order");
+orderButton.addEventListener("click", (e) => submitForm(e));
+
+function submitForm(e) {
+  e.preventDefault();
+  if (cart.length === 0) {
+    alert("Veuillez choisir un article !");
+    return;
+  }
+
+  if (isFormInvalid()) return;
+  if (isEmailInvalid()) return;
+
+  const body = makeRequestBody();
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      const orderId = data.orderId;
+      window.location.href =
+        "../html/confirmation.html" + "?orderId=" + orderId;
+    })
+    .catch((err) => console.error(err));
+}
+
+function isEmailInvalid() {
+  let email = document.querySelector("#email").value;
+  let regex = /^[A-Za-z0-9\-\.]+@([A-Za-z0-9\-]+\.)+[A-Za-z0-9-]{2,4}$/;
+  if (regex.test(email) === false) {
+    let erreurDeSaisi = document.getElementById("emailErrorMsg");
+    erreurDeSaisi.innerHTML = "Le champ Email est requis";
+    return true;
+  }
+  return false;
+}
+
+function isFormInvalid() {
+  // Variables pour récupérer les id du HTML
+  let inputFirstName = document.getElementById("firstName");
+  let inputLastName = document.getElementById("lastName");
+  let inputAdress = document.getElementById("address");
+  let inputCity = document.getElementById("city");
+
+  // Variables Regex pour imposer des conditions de saisi
+  let regexNameLastNameCity = /^([a-zA-Z-\s]{1,50})+$/;
+  let regexAdress = /^([A-Za-z0-9\s]{3,50})+$/;
+
+  // Condition de validation pour le champ PRENOM -----------------
+  // Si il est vide
+  if (inputFirstName.value == "") {
+    let erreurDeSaisi = document.getElementById("firstNameErrorMsg");
+    erreurDeSaisi.innerHTML = "Le champ Prénom est requis";
+
+    // Si il est mal rempli selon le Regex
+  } else if (regexNameLastNameCity.test(inputFirstName.value) == false) {
+    let erreurDeSaisi = document.getElementById("firstNameErrorMsg");
+    erreurDeSaisi.innerHTML =
+      "Le prénom doit comporter que des lettres, des tirets";
+
+    // Si il est bien rempli (suppression du message d'erreur)
+  } else {
+    let erreurDeSaisi = document.getElementById("firstNameErrorMsg");
+    erreurDeSaisi.innerHTML = "";
+  }
+
+  // Condition de validation pour le champ NOM -----------------
+  // Si il est vide
+  if (inputLastName.value == "") {
+    let erreurDeSaisi = document.getElementById("lastNameErrorMsg");
+    erreurDeSaisi.innerHTML = "Le champ Nom est requis";
+
+    // Si il est mal rempli selon le Regex
+  } else if (regexNameLastNameCity.test(inputLastName.value) == false) {
+    let erreurDeSaisi = document.getElementById("lastNameErrorMsg");
+    erreurDeSaisi.innerHTML =
+      "Le nom doit comporter que des lettres, des tirets";
+
+    // Si il est bien rempli (suppression du message d'erreur)
+  } else {
+    let erreurDeSaisi = document.getElementById("lastNameErrorMsg");
+    erreurDeSaisi.innerHTML = "";
+  }
+
+  // Condition de validation pour le champ ADRESSE -----------------
+  // Si il est vide
+  if (inputAdress.value == "") {
+    let erreurDeSaisi = document.getElementById("addressErrorMsg");
+    erreurDeSaisi.innerHTML = "Le champ Adresse est requis";
+
+    // Si il est mal rempli selon le Regex
+  } else if (regexAdress.test(inputAdress.value) == false) {
+    let erreurDeSaisi = document.getElementById("addressErrorMsg");
+    erreurDeSaisi.innerHTML =
+      "L'adresse doit comporter que des lettres, des tirets, des chiffres";
+
+    // Si il est bien rempli (suppression du message d'erreur)
+  } else {
+    let erreurDeSaisi = document.getElementById("addressErrorMsg");
+    erreurDeSaisi.innerHTML = "";
+  }
+
+  // Condition de validation pour le champ VILLE -----------------
+  // Si il est vide
+  if (inputCity.value == "") {
+    let erreurDeSaisi = document.getElementById("cityErrorMsg");
+    erreurDeSaisi.innerHTML = "Le champ Ville est requis";
+
+    // Si il est mal rempli selon le Regex
+  } else if (regexNameLastNameCity.test(inputCity.value) == false) {
+    let erreurDeSaisi = document.getElementById("cityErrorMsg");
+    erreurDeSaisi.innerHTML =
+      "La ville doit comporter que des lettres, des tirets";
+
+    // Si il est bien rempli (suppression du message d'erreur)
+  } else {
+    let erreurDeSaisi = document.getElementById("cityErrorMsg");
+    erreurDeSaisi.innerHTML = "";
+  }
+}
+
+function makeRequestBody() {
+  const form = document.querySelector(".cart__order__form");
+  const firstName = form.elements.firstName.value;
+  const lastName = form.elements.lastName.value;
+  const address = form.elements.address.value;
+  const city = form.elements.city.value;
+  const email = form.elements.email.value;
+  const body = {
+    contact: {
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+      city: city,
+      email: email,
+    },
+    products: getIdsFromCache(),
+  };
+  return body;
+}
+
+function getIdsFromCache() {
+  const numberOfProducts = localStorage.length;
+  const ids = [];
+  for (let i = 0; i < numberOfProducts; i++) {
+    const key = localStorage.key(i);
+    const id = key.split("-")[0];
+    ids.push(id);
+  }
+  return ids;
 }
