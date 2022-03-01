@@ -2,13 +2,7 @@ let queryString = window.location.search;
 let urlParams = new URLSearchParams(queryString);
 let id = urlParams.get("id");
 
-if (id != null) {
-  let itemPrice = 0;
-  let imgUrl, altText, articleName;
-}
-
 // Récupération des articles de l'API
-
 fetch("http://localhost:3000/api/products/" + id)
   .then((response) => response.json())
   .then((res) => handleData(res));
@@ -27,7 +21,6 @@ function handleData(kanap) {
 }
 
 // Insertion de l'image
-
 function makeImage(imageUrl, altTxt) {
   const image = document.createElement("img");
   image.src = imageUrl;
@@ -37,28 +30,24 @@ function makeImage(imageUrl, altTxt) {
 }
 
 // Insertion du titre
-
 function makeTitle(name) {
   const h1 = document.querySelector("#title");
   if (h1 != null) h1.textContent = name;
 }
 
 // Insertion de lq description
-
 function makeDescription(description) {
   const p = document.querySelector("#description");
   if (p != null) p.textContent = description;
 }
 
 // Insertion du prix
-
 function makePrice(price) {
   const span = document.querySelector("#price");
   if (span != null) span.textContent = price;
 }
 
 // Insertion de la couleur
-
 function makeOptions(colors) {
   const select = document.querySelector("#colors");
   if (select != null) {
@@ -72,12 +61,10 @@ function makeOptions(colors) {
 }
 
 // Insertion du bouton "ajouter au panier"
-
 const button = document.querySelector("#addToCart");
 button.addEventListener("click", handleClick);
 
 // Insertion du choix de couleur
-
 function handleClick() {
   const color = document.querySelector("#colors").value;
   const quantity = document.querySelector("#quantity").value;
@@ -89,7 +76,6 @@ function handleClick() {
 }
 
 // On sauvegarde les articles dans le localStorage
-
 function saveOrder(color, quantity) {
   //pour éditer l'id de l'article en fonction de la couleur
   const key = `${id}-${color}`;
@@ -107,7 +93,6 @@ function saveOrder(color, quantity) {
 }
 
 // Empêche le changement de page si un ou plusieurs éléments est null avec fenêtre pop-up
-
 function isOrderInvalid(color, quantity) {
   if (color == null || color === "" || quantity == null || quantity == 0) {
     alert(" Merci de choisir une couleur et une quantitée");

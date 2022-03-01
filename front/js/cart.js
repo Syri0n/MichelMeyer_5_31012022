@@ -3,12 +3,14 @@ const cart = [];
 // On récupère les articles depuis le cache
 
 retrieveItemsFromCache();
+
 cart.forEach((item) => displayItem(item));
 
 function retrieveItemsFromCache() {
   const numberOfItems = localStorage.length;
   for (let i = 0; i < numberOfItems; i++) {
     const item = localStorage.getItem(localStorage.key(i)) || "";
+    // On récupère les produits sous forme d'objet
     const itemObject = JSON.parse(item);
     cart.push(itemObject);
   }
@@ -230,7 +232,7 @@ function isEmailInvalid() {
   let regex = /^[A-Za-z0-9\-\.]+@([A-Za-z0-9\-]+\.)+[A-Za-z0-9-]{2,4}$/;
   if (regex.test(email) === false) {
     let erreurDeSaisi = document.getElementById("emailErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Le champ Email est requis";
     return true;
   }
   return false;
@@ -251,7 +253,7 @@ function isFormInvalid() {
   // Si il est vide
   if (inputFirstName.value == "") {
     let erreurDeSaisi = document.getElementById("firstNameErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Le champ Prénom est requis";
 
     // Si il est mal rempli selon le Regex
   } else if (regexNameLastNameCity.test(inputFirstName.value) == false) {
@@ -269,7 +271,7 @@ function isFormInvalid() {
   // Si il est vide
   if (inputLastName.value == "") {
     let erreurDeSaisi = document.getElementById("lastNameErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Le champ Nom est requis";
 
     // Si il est mal rempli selon le Regex
   } else if (regexNameLastNameCity.test(inputLastName.value) == false) {
@@ -287,7 +289,7 @@ function isFormInvalid() {
   // Si il est vide
   if (inputAdress.value == "") {
     let erreurDeSaisi = document.getElementById("addressErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Le champ Adresse est requis";
 
     // Si il est mal rempli selon le Regex
   } else if (regexAdress.test(inputAdress.value) == false) {
@@ -305,7 +307,7 @@ function isFormInvalid() {
   // Si il est vide
   if (inputCity.value == "") {
     let erreurDeSaisi = document.getElementById("cityErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Le champ Ville est requis";
 
     // Si il est mal rempli selon le Regex
   } else if (regexNameLastNameCity.test(inputCity.value) == false) {
