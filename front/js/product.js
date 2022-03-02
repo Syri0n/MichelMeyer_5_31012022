@@ -73,7 +73,6 @@ function handleClick() {
   const quantity = document.querySelector("#quantity").value;
 
   if (isOrderInvalid(color, quantity)) return;
-  addNewProduct();
   saveOrder(color, quantity);
   alert("Produit ajouté au panier");
   window.location.href = "cart.html";
@@ -106,5 +105,3 @@ function isOrderInvalid(color, quantity) {
     return true;
   }
 }
-
-function addNewProduct() {}
