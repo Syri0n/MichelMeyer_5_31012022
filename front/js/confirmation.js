@@ -13,8 +13,8 @@ function displayOrderId(orderId) {
   orderIdElement.textContent = orderId;
 }
 
-// // On vide le localStorage une fois la commande validé et le numéro de commande obtenu
-// function removeAllCache() {
-//   const cache = window.localStorage;
-//   cache.clear();
-// }
+// On vide le localStorage une fois la commande validé et le numéro de commande obtenu
+function removeAllCache() {
+  const cache = window.localStorage;
+  cache.clear();
+}

@@ -1,10 +1,12 @@
-let queryString = window.location.search;
-let urlParams = new URLSearchParams(queryString);
-let id = urlParams.get("id");
+// Récupération de l'url de la page produit
+let queryStringUrl = window.location.search;
+
+// Extraction de l'id
+let urlSearchParams = new URLSearchParams(queryStringUrl);
+let productId = urlSearchParams.get("id");
 
 // Récupération des articles de l'API
-
-fetch("http://localhost:3000/api/products/" + id)
+fetch("http://localhost:3000/api/products/" + productId)
   .then((response) => response.json())
   .then((res) => handleData(res));
 
@@ -36,7 +38,7 @@ function makeTitle(name) {
   if (h1 != null) h1.textContent = name;
 }
 
-// Insertion de lq description
+// Insertion de la description
 function makeDescription(description) {
   const p = document.querySelector("#description");
   if (p != null) p.textContent = description;
@@ -75,16 +77,17 @@ function handleClick() {
   if (isOrderInvalid(color, quantity)) return;
   saveOrder(color, quantity);
   alert("Produit ajouté au panier");
-  window.location.href = "cart.html";
+  // window.location.href = "cart.html";
 }
 
 // On sauvegarde les articles dans le localStorage
 function saveOrder(color, quantity) {
   //pour éditer l'id de l'article en fonction de la couleur
-  const key = `${id}-${color}`;
+  const key = `${productId}-${color}`;
 
+  // Création d'un objet JSON regroupant les informations du produit à ajouter au panier
   const data = {
-    id: id,
+    id: productId,
     color: color,
     quantity: Number(quantity),
     price: itemPrice,
@@ -92,7 +95,9 @@ function saveOrder(color, quantity) {
     altTxt: altText,
     name: articleName,
   };
+ console.log(data)
   localStorage.setItem(key, JSON.stringify(data));
+
 }
 
 // Empêche le changement de page si un ou plusieurs éléments est null avec fenêtre pop-up
