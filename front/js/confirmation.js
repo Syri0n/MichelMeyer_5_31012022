@@ -1,6 +1,6 @@
 const orderId = getOrderId();
 displayOrderId(orderId);
-removeAllCache();
+// removeAllCache();
 
 function getOrderId() {
   const queryString = window.location.search;
