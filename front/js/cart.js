@@ -5,17 +5,10 @@ const datasInStorage = JSON.parse(localStorage.getItem("cart"));
 const listOfQuantity = document.getElementsByClassName("itemQuantity");
 
 // Balise pour l'insertion de la quantité totale de produits
-let totalQuantity = document.getElementById("totalQuantity");
+const totalQuantity = document.getElementById("totalQuantity");
 
 // Balise pour l'insertion du prix total
-let totalPrice = document.getElementById("totalPrice");
-
-// Récupération de l'url de la page produit
-const queryStringUrl = window.location.search;
-
-// Extraction de l'id
-const urlSearchParams = new URLSearchParams(queryStringUrl);
-const newOrderId = urlSearchParams.get("id");
+const totalPrice = document.getElementById("totalPrice");
 
 // Création d'un ajout d'article dans le panier
 function createCart(product) {
@@ -43,7 +36,7 @@ function createCart(product) {
   content.classList.add("cart__item__content");
 
   let contentTitlePrice = document.createElement("div");
-  contentTitlePrice.classList.add("cart__item__content__titlePrice");
+  contentTitlePrice.classList.add("cart__item__content__description");
 
   let settings = document.createElement("div");
   settings.classList.add("cart__item__content__settings");
@@ -115,7 +108,7 @@ function totalQuantityPrices() {
 
   //Prix total
   let listOfPrices = document.querySelectorAll(
-    ".cart__item__content__titlePrice p"
+    ".cart__item__content__description p"
   );
   let sumPrices = 0;
   for (let i = 0; i < listOfPrices.length; i++) {
@@ -132,7 +125,7 @@ function changeQuantity() {
       input.dataset.value = input.value;
 
       for (let i = 0; i < datasInStorage.length; i++) {
-        datasInStorage[i].quantity = listOfQuantity[i].dataset.value;
+        datasInStorage[i].qty = listOfQuantity[i].dataset.value;
       }
       localStorage.setItem("cart", JSON.stringify(datasInStorage));
     });
@@ -161,48 +154,10 @@ function deleteItem() {
 
 //-------------------------------- Formulaire --------------------------------------------
 
-const orderButton = document.querySelector("#order");
-orderButton.addEventListener("click", (e) => submitForm(e));
+//DONNEES DU FORMULAIRE
 
-function submitForm(e) {
-  e.preventDefault();
-  if (datasInStorage.length === 0) {
-    alert("Veuillez choisir un article !");
-    return;
-  }
-
-  if (isFormInvalid()) return;
-  if (isEmailInvalid()) return;
-
-  const contact = makeRequestContact();
-  fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    contact: JSON.stringify(contact),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      const orderId = data.orderId;
-      window.location.href =
-        "../html/confirmation.html" + "?orderId=" + orderId;
-    })
-    .catch((err) => console.error(err));
-}
-
-function isEmailInvalid() {
-  let email = document.querySelector("#email").value;
-  let regex = /^[A-Za-z0-9\-\.]+@([A-Za-z0-9\-]+\.)+[A-Za-z0-9-]{2,4}$/;
-  if (regex.test(email) === false) {
-    let erreurDeSaisi = document.getElementById("emailErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
-    return true;
-  }
-  return false;
-}
-
-function isFormInvalid() {
+// gestion du formulaire
+function checkForm() {
   // Variables pour récupérer les id du HTML
   let inputFirstName = document.getElementById("firstName");
   let inputLastName = document.getElementById("lastName");
@@ -219,7 +174,7 @@ function isFormInvalid() {
   // Si il est vide
   if (inputFirstName.value == "") {
     let erreurDeSaisi = document.getElementById("firstNameErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ !";
 
     // Si il est mal rempli selon le Regex
   } else if (regexNameLastNameCity.test(inputFirstName.value) == false) {
@@ -237,7 +192,7 @@ function isFormInvalid() {
   // Si il est vide
   if (inputLastName.value == "") {
     let erreurDeSaisi = document.getElementById("lastNameErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ !";
 
     // Si il est mal rempli selon le Regex
   } else if (regexNameLastNameCity.test(inputLastName.value) == false) {
@@ -255,7 +210,7 @@ function isFormInvalid() {
   // Si il est vide
   if (inputAdress.value == "") {
     let erreurDeSaisi = document.getElementById("addressErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ !";
 
     // Si il est mal rempli selon le Regex
   } else if (regexAdress.test(inputAdress.value) == false) {
@@ -273,7 +228,7 @@ function isFormInvalid() {
   // Si il est vide
   if (inputCity.value == "") {
     let erreurDeSaisi = document.getElementById("cityErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ !";
 
     // Si il est mal rempli selon le Regex
   } else if (regexNameLastNameCity.test(inputCity.value) == false) {
@@ -288,42 +243,57 @@ function isFormInvalid() {
   }
   if (regex.test(email) === false) {
     let erreurDeSaisi = document.getElementById("emailErrorMsg");
-    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ";
+    erreurDeSaisi.innerHTML = "Veuillez compléter ce champ !";
     return true;
   }
   return false;
 }
 
-function makeRequestContact() {
-  const form = document.querySelector(".cart__order__form");
-  const firstName = form.elements.firstName.value;
-  const lastName = form.elements.lastName.value;
-  const address = form.elements.address.value;
-  const city = form.elements.city.value;
-  const email = form.elements.email.value;
-  const contact = {
+// ENVOI DES DONNÉES DU FORMULAIRE
+function send() {
+  //envoie les données à l'Api et redirige vers page confirmation
+  if (checkForm()) return;
+  //crée un nouvel objet contact et 1 tableau de produits :
+  let basket = datasInStorage;
+  let products = new Array();
+  basket.forEach((element) => {
+    products.push(element.id);
+  });
+  let contact = {
     contact: {
-      firstName: firstName,
-      lastName: lastName,
-      address: address,
-      city: city,
-      email: email,
+      firstName: document.getElementById("firstName").value,
+      lastName: document.getElementById("lastName").value,
+      address: document.getElementById("address").value,
+      city: document.getElementById("city").value,
+      email: document.getElementById("email").value,
     },
-    products: getIdsFromCache(),
+    products: products,
   };
-  return contact;
+  //requête POST pour transmettre objet contact à l'API en sérialisant données en JSON
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(contact),
+  })
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    //redirige vers page confirmation et récupére ID de commande et le supprime du localStorage
+    .then(function (res) {
+      document.location.href = "confirmation.html?orderId=" + res.orderId;
+    });
 }
 
-function getIdsFromCache() {
-  const numberOfProducts = localStorage.length;
-  const ids = [];
-  for (let i = 0; i < numberOfProducts; i++) {
-    const key = localStorage.key(i);
-    const id = key.split("-")[0];
-    ids.push(id);
-  }
-  return ids;
-}
+//envoi du formulaire au click sur bouton Commander
+document.getElementById("order").addEventListener("click", function (e) {
+  e.preventDefault();
+  send();
+});
 
 function isCart() {
   // Fonctions à appliquer sur la page panier

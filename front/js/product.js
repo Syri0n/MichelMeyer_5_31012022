@@ -82,8 +82,12 @@ function addItem(id) {
       altTxt: altText,
       name: articleName,
     };
-    if (color === "") {
-      window.alert("Il est nécessaire de choisir une couleur");
+    if (color == null || color === "" || color == 0) {
+      alert(" Merci de choisir une couleur");
+      return true;
+    } else if (qty === "" || qty == null || qty == 0) {
+      alert(" Merci de choisir une quantitée");
+      return true;
     }
 
     // si le panier est déjà sauvegardé récupère les données du localStorage
@@ -106,65 +110,30 @@ function addItem(id) {
           parseInt(cart[productPosition].qty) + parseInt(newItem.qty);
         localStorage.setItem("cart", JSON.stringify(cart));
       }
-      window.alert("Ce canapé à bien été ajouté");
+      window.alert("L'article a été ajouté à votre panier");
       //alert
     } else {
       // si le panier n'existait pas on en crée un nouveau dans le localStorage
       let newCart = new Array();
       newCart.push(newItem);
       localStorage.setItem("cart", JSON.stringify(newCart));
-      window.alert("Ce canapé à bien été ajouté");
+      window.alert("L'article a été ajouté à votre panier");
     }
   });
 }
 addItem();
-// // Insertion du bouton "ajouter au panier"
-// const button = document.querySelector("#addToCart");
 
-// // On écoute l'évenement au click
-// button.addEventListener("click", handleClick);
-
-// // Insertion du choix de couleur
-// function handleClick() {
-//   const productColor = document.querySelector("#colors").value;
-//   const productQuantity = document.querySelector("#quantity").value;
-
-//   if (isOrderInvalid(productColor, productQuantity)) return;
-//   saveOrder(productColor, productQuantity);
-//   alert("Produit ajouté au panier");
-//   // window.location.href = "cart.html";
-// }
-
-// // On sauvegarde les articles dans le localStorage
-// function saveOrder(productColor, productQuantity) {
-//   //pour éditer l'id de l'article en fonction de la couleur
-//   const key = `${productId}-${productColor}`;
-
-//   // Création d'un objet JSON regroupant les informations du produit à ajouter au panier
-//   const productJson = {
-//     id: productId,
-//     color: productColor,
-//     quantity: Number(productQuantity),
-//     price: itemPrice,
-//     imageUrl: imgUrl,
-//     altTxt: altText,
-//     name: articleName,
-//   };
-//   console.log(productJson);
-//   localStorage.setItem(key, JSON.stringify(productJson));
-// }
-
-// // Empêche le changement de page si un ou plusieurs éléments est null avec fenêtre pop-up
-// function isOrderInvalid(productColor, productQuantity) {
-//   if (productColor == null || productColor === "" || productColor == 0) {
-//     alert(" Merci de choisir une couleur");
-//     return true;
-//   } else if (
-//     productQuantity === "" ||
-//     productQuantity == null ||
-//     productQuantity == 0
-//   ) {
-//     alert(" Merci de choisir une quantitée");
-//     return true;
-//   }
-// }
+// Empêche le changement de page si un ou plusieurs éléments est null avec fenêtre pop-up
+function isOrderInvalid(productColor, productQuantity) {
+  if (productColor == null || productColor === "" || productColor == 0) {
+    alert(" Merci de choisir une couleur");
+    return true;
+  } else if (
+    productQuantity === "" ||
+    productQuantity == null ||
+    productQuantity == 0
+  ) {
+    alert(" Merci de choisir une quantitée");
+    return true;
+  }
+}
