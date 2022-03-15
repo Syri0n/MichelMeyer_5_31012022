@@ -152,9 +152,16 @@ function deleteItem() {
   }
 }
 
-//-------------------------------- Formulaire --------------------------------------------
+function isCart() {
+  addItemsToCart();
+  totalQuantityPrices();
+  changeQuantity();
+  deleteItem();
+}
 
-//DONNEES DU FORMULAIRE
+isCart();
+
+//-------------------------------- Formulaire --------------------------------------------
 
 // gestion du formulaire
 function checkForm() {
@@ -294,14 +301,3 @@ document.getElementById("order").addEventListener("click", function (e) {
   e.preventDefault();
   send();
 });
-
-function isCart() {
-  // Fonctions à appliquer sur la page panier
-  //   if (localStorage.getItem("cart")) {
-  addItemsToCart();
-  totalQuantityPrices();
-  changeQuantity();
-  deleteItem();
-}
-
-isCart();
